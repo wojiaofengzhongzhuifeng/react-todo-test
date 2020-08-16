@@ -1,8 +1,9 @@
 import React from 'react';
-import { Input, Button, Modal} from 'antd';
+import { Input, Button, Modal, Tabs} from 'antd';
 import "./App.css"
 
 const { Search } = Input;
+const { TabPane } = Tabs;
 
 
 class App extends React.Component{
@@ -10,7 +11,8 @@ class App extends React.Component{
 		super();
 		this.state = {
 			visible: false,
-			inputValue: 1111111
+			inputValue: '',
+			todoList: []
 		}
 	}
 	render(){
@@ -22,12 +24,25 @@ class App extends React.Component{
 						onSearch={value => console.log(value)}
 						style={{ width: 200 }}
 					/>
-					<Button type="primary" onClick={() => this.handleClick}>新增</Button>
-
+					<Button type="primary" onClick={this.handleClick}>新增</Button>
+				
 				</div>
 
 				<div className="todo-tab">
-					todo-tab
+					<Tabs defaultActiveKey="1">
+						<TabPane tab="未完成" key="1">
+							<ul>
+								{this.state.todoList.map((todo)=>{
+									return (
+										<li key={todo}>{todo}</li>
+									)
+								})}
+							</ul>
+						</TabPane>
+						<TabPane tab="已完成" key="2">
+							已完成
+						</TabPane>
+					</Tabs>
 				</div>
 
 				<Modal
@@ -45,7 +60,7 @@ class App extends React.Component{
 
 	
 	// 1. 监听点击事件
-	handleClick() {
+	handleClick = ()=> {
 		let { visible } = this.state;
 		this.toggleModalVisible(!visible)
 	}
@@ -68,7 +83,8 @@ class App extends React.Component{
 	handleOk = ()=>{
 		this.toggleModalVisible(false)
 		console.log(this.state.inputValue)
-
+		let { inputValue} = this.state
+		this.state.todoList.push(inputValue)
 	}
 	handleCancel = ()=>{
 		this.toggleModalVisible(false)
