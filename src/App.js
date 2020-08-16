@@ -34,7 +34,7 @@ class App extends React.Component{
 							<ul>
 								{this.state.todoList.map((todo)=>{
 									return (
-										<li key={todo}>{todo}</li>
+										<li key={todo} onClick={()=>{this.handleClickTodoItem(todo)}}>{todo}</li>
 									)
 								})}
 							</ul>
@@ -72,6 +72,12 @@ class App extends React.Component{
 		})
 	}
 
+	handleClickTodoItem = (target) => {
+		this.setState({
+			todoList: this.del(target)
+		})
+	}
+
 	// 2. modal 显示隐藏
 	toggleModalVisible(boolean){
 		this.setState({
@@ -88,6 +94,12 @@ class App extends React.Component{
 	}
 	handleCancel = ()=>{
 		this.toggleModalVisible(false)
+	}
+
+	del = (deoTodo) => {
+		return this.state.todoList.filter((todo)=>{
+			return todo !== deoTodo;
+		})
 	}
 	
 }
