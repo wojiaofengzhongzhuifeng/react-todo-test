@@ -11,8 +11,11 @@ class App extends React.Component{
 		super();
 		this.state = {
 			visible: false,
+			editVisible:false,
 			inputValue: '',
-			todoList: []
+			todoList: [],
+			editInputValue: '',
+			wantToEditInputValue: '',
 		}
 	}
 	render(){
@@ -34,7 +37,11 @@ class App extends React.Component{
 							<ul>
 								{this.state.todoList.map((todo)=>{
 									return (
-										<li key={todo} onClick={()=>{this.handleClickTodoItem(todo)}}>{todo}</li>
+										<div>
+											<li key={todo} onClick={()=>{this.handleDelTodo(todo)}}>{todo}</li>
+											<Button  onClick={()=>{this.handleEditTodo(todo)}}>修改</Button>
+										</div>
+
 									)
 								})}
 							</ul>
@@ -52,6 +59,15 @@ class App extends React.Component{
 					onCancel={this.handleCancel}
 				>
 					<Input placeholder="Basic usage" value={this.state.inputValue} onChange={this.handleInputChange}/>
+				</Modal>
+
+				<Modal
+					title="修改 todo"
+					visible={this.state.editVisible}
+					onOk={this.handleEditOk}
+					onCancel={this.handleEditCancel}
+				>
+					<Input placeholder="Basic usage" value={this.state.editInputValue} onChange={this.handleEditInputChange}/>
 				</Modal>
 
 			</div>
@@ -72,10 +88,24 @@ class App extends React.Component{
 		})
 	}
 
-	handleClickTodoItem = (target) => {
+	handleEditInputChange = (e) => {
+		this.setState({
+			editInputValue: e.target.value
+		})
+	}
+
+	handleDelTodo = (target) => {
 		this.setState({
 			todoList: this.del(target)
 		})
+	}
+
+	handleEditTodo = (target) => {
+		this.setState({
+			editInputValue: target,
+			wantToEditInputValue: target
+		})
+		this.toggleEditModalVisible(true)
 	}
 
 	// 2. modal 显示隐藏
@@ -84,6 +114,12 @@ class App extends React.Component{
 			visible: boolean
 		})
 		
+	}
+
+	toggleEditModalVisible(boolean){
+		this.setState({
+			editVisible: boolean
+		})
 	}
 	
 	handleOk = ()=>{
@@ -96,10 +132,27 @@ class App extends React.Component{
 		this.toggleModalVisible(false)
 	}
 
+
+	handleEditOk = ()=>{
+		let afterEditTodoList = this.edit(this.state.todoList, this.state.wantToEditInputValue, this.state.editInputValue)
+		this.setState({
+			todoList: afterEditTodoList
+		})
+		this.toggleEditModalVisible(false)
+	}
+	handleEditCancel = ()=>{
+
+		this.toggleEditModalVisible(false)
+	}
+
 	del = (deoTodo) => {
 		return this.state.todoList.filter((todo)=>{
 			return todo !== deoTodo;
 		})
+	}
+
+	edit = (array, todoItem, newTodoItem) => {
+		return array.map(function(item) { return item === todoItem ? newTodoItem : item; });
 	}
 	
 }
