@@ -1,9 +1,11 @@
 import React from 'react';
+import { Button } from 'antd';
+import "./App.css"
 
-function App() {
-	return (
-		<div>app</div>
-	);
-}
+const App = () => (
+	<div className="App">
+		<Button type="primary">Buttonaaaaa</Button>
+	</div>
+);
 
 export default App;
